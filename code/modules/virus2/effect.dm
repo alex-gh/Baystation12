@@ -201,7 +201,6 @@
 /datum/disease2/effect/catbeast
 	name = "Kingston Syndrome"
 	stage = 4
-	badness = 2
 	activate(var/mob/living/carbon/mob,var/multiplier)
 		if(istype(mob,/mob/living/carbon/human))
 			var/mob/living/carbon/human/h = mob
@@ -214,7 +213,7 @@
 	name = "Spontaneous Cellular Collapse"
 	stage = 4
 	activate(var/mob/living/carbon/mob,var/multiplier)
-		mob.reagents.add_reagent("pacid", 1)
+		mob.reagents.add_reagent("pacid", 2*multiplier)
 		mob << "<span class = 'warning'> Your body burns as your cells break down.</span>"
 		shake_camera(mob,5*multiplier)
 
@@ -232,7 +231,7 @@
 				mob << "<span class = 'warning'>A chunk of meat falls off you!</span>"
 				var/totalslabs = 1
 				var/obj/item/weapon/reagent_containers/food/snacks/meat/allmeat[totalslabs]
-				if( istype(mob, /mob/living/carbon/human/) )
+				if( istype(mob, /mob/living/carbon/human/) && !M.is_mechanical() )
 						//
 					var/sourcename = mob.real_name
 					var/sourcejob = mob.job
@@ -254,7 +253,7 @@
 							new /obj/effect/decal/cleanable/blood/gibs(Tx,i)
 			if(2)
 				for (var/datum/organ/external/E in H.organs)
-					if(pick(1,0))
+					if(prob(5))
 						E.droplimb(1)
 			if(3)
 				if(H.species.name != "Skellington")
@@ -509,7 +508,8 @@
 		//
 		var/obj/item/clothing/mask/gas/virusclown_hat = new /obj/item/clothing/mask/gas/virusclown_hat
 		mob.equip_to_slot(virusclown_hat, slot_wear_mask)
-		mob.reagents.add_reagent("psilocybin", 20)
+		if (mob.reagents.get_reagent_amount("psilocybin") < 25)
+			mob.reagents.add_reagent("psilocybin", 5)
 		mob.say(pick("HONK!", "Honk!", "Honk.", "Honk?", "Honk!!", "Honk?!", "Honk..."))
 
 
